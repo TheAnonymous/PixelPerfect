@@ -1,0 +1,38 @@
+name: Publish stable release
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+      - name: Set up Node 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Rebuild and verify release
+        run: npm run check
+      - name: Test showcase in every browser and viewport
+        run: npm run test:e2e
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${GITHUB_REF_NAME}"
+          --repo "${GITHUB_REPOSITORY}"
+          --title "PixelPerfect ${GITHUB_REF_NAME}"
+          --notes-file RELEASE_NOTES.md
+          dist/release/pixelperfect-v1.0.0.tar.gz
+          dist/release/pixelperfect-v1.0.0.tar.gz.sha256

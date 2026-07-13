@@ -1,0 +1,44 @@
+.pp-container {
+  width: min(calc(100% - var(--pp-space-6)), var(--pp-content-width));
+  margin-inline: auto;
+}
+
+.pp-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pp-stack-gap, var(--pp-space-4));
+}
+
+.pp-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pp-cluster-gap, var(--pp-space-3));
+  align-items: center;
+}
+
+.pp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--pp-grid-gap, var(--pp-space-6));
+}
+
+.pp-section {
+  padding-block: clamp(var(--pp-space-8), 8vw, calc(var(--pp-space-12) * 2));
+}
+
+.pp-section--compact {
+  padding-block: var(--pp-space-8);
+}
+
+.pp-pixel-divider {
+  height: var(--pp-pixel);
+  margin: 0;
+  border: 0;
+  background: repeating-linear-gradient(
+    to right,
+    var(--pp-color-ink) 0,
+    var(--pp-color-ink) calc(var(--pp-pixel) * 3),
+    transparent calc(var(--pp-pixel) * 3),
+    transparent calc(var(--pp-pixel) * 5)
+  );
+}

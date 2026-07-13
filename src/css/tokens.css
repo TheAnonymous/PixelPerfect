@@ -1,0 +1,34 @@
+@font-face {
+  font-family: "Pixelify Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("../assets/font/PixelifySans-VariableFont_wght.ttf") format("truetype");
+}
+
+:root {
+  --pp-color-screen: #e6f4a8;
+  --pp-color-mid: #a9c46c;
+  --pp-color-shadow: #526b46;
+  --pp-color-ink: #16231d;
+  --pp-pixel: 4px;
+  --pp-space-1: calc(var(--pp-pixel) * 1);
+  --pp-space-2: calc(var(--pp-pixel) * 2);
+  --pp-space-3: calc(var(--pp-pixel) * 3);
+  --pp-space-4: calc(var(--pp-pixel) * 4);
+  --pp-space-6: calc(var(--pp-pixel) * 6);
+  --pp-space-8: calc(var(--pp-pixel) * 8);
+  --pp-space-12: calc(var(--pp-pixel) * 12);
+  --pp-font-family: "Pixelify Sans", monospace;
+  --pp-font-size-sm: 0.875rem;
+  --pp-font-size-md: 1rem;
+  --pp-font-size-lg: 1.25rem;
+  --pp-font-size-xl: clamp(2.4rem, 8vw, 5.5rem);
+  --pp-line-height: 1.25;
+  --pp-border-width: var(--pp-pixel);
+  --pp-radius: 0;
+  --pp-shadow-sm: var(--pp-pixel) var(--pp-pixel) 0 var(--pp-color-shadow);
+  --pp-shadow-md: calc(var(--pp-pixel) * 2) calc(var(--pp-pixel) * 2) 0 var(--pp-color-shadow);
+  --pp-shadow-lg: calc(var(--pp-pixel) * 3) calc(var(--pp-pixel) * 3) 0 var(--pp-color-ink);
+  --pp-content-width: 72rem;
+}

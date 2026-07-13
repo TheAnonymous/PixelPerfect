@@ -1,0 +1,98 @@
+.pp-button,
+.pp-icon-button {
+  display: inline-flex;
+  min-height: calc(var(--pp-pixel) * 11);
+  align-items: center;
+  justify-content: center;
+  gap: var(--pp-space-2);
+  padding: var(--pp-space-2) var(--pp-space-4);
+  border: var(--pp-border-width) solid var(--pp-color-ink);
+  border-radius: var(--pp-radius);
+  color: var(--pp-color-screen);
+  background: var(--pp-color-ink);
+  box-shadow: var(--pp-shadow-sm);
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  transition: transform 80ms steps(1), box-shadow 80ms steps(1);
+}
+
+.pp-button:hover,
+.pp-icon-button:hover {
+  color: var(--pp-color-ink);
+  background: var(--pp-color-mid);
+}
+
+.pp-button:active,
+.pp-icon-button:active,
+.pp-button[aria-pressed="true"] {
+  box-shadow: none;
+  transform: translate(var(--pp-pixel), var(--pp-pixel));
+}
+
+.pp-button:disabled,
+.pp-icon-button:disabled,
+.pp-button[aria-disabled="true"] {
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+.pp-button--secondary {
+  color: var(--pp-color-ink);
+  background: var(--pp-color-screen);
+}
+
+.pp-button--ghost {
+  color: var(--pp-color-ink);
+  background: transparent;
+  box-shadow: none;
+}
+
+.pp-button--small {
+  min-height: calc(var(--pp-pixel) * 8);
+  padding: var(--pp-space-1) var(--pp-space-2);
+  font-size: var(--pp-font-size-sm);
+}
+
+.pp-button--loading::before {
+  width: var(--pp-space-3);
+  height: var(--pp-space-3);
+  border: var(--pp-pixel) dotted currentcolor;
+  content: "";
+  animation: pp-spin 700ms steps(4) infinite;
+}
+
+.pp-icon-button {
+  width: calc(var(--pp-pixel) * 11);
+  padding: var(--pp-space-2);
+}
+
+.pp-icon {
+  width: 1.25em;
+  height: 1.25em;
+  fill: currentcolor;
+  pointer-events: none;
+}
+
+.pp-button-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.pp-button-group > * {
+  margin-right: calc(var(--pp-border-width) * -1);
+  box-shadow: none;
+}
+
+.pp-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--pp-space-1);
+  font-weight: 700;
+  text-decoration-thickness: var(--pp-pixel);
+  text-underline-offset: var(--pp-pixel);
+}
+
+.pp-link:hover {
+  color: var(--pp-color-shadow);
+}

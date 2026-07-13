@@ -1,0 +1,11 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "rules": {
+    "alpha-value-notation": "number",
+    "color-function-notation": "legacy",
+    "custom-property-pattern": "^pp-[a-z0-9-]+$",
+    "selector-class-pattern": "^(pp|site)-[a-z0-9_-]+$",
+    "declaration-block-no-redundant-longhand-properties": null,
+    "no-descending-specificity": null
+  }
+}

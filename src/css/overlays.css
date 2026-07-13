@@ -1,0 +1,50 @@
+.pp-dialog {
+  width: min(calc(100% - var(--pp-space-8)), 34rem);
+  max-height: calc(100% - var(--pp-space-8));
+  padding: 0;
+  overflow: visible;
+  border: var(--pp-border-width) solid var(--pp-color-ink);
+  color: var(--pp-color-ink);
+  background: var(--pp-color-screen);
+  box-shadow: var(--pp-shadow-lg);
+}
+
+.pp-dialog::backdrop {
+  background: rgb(22, 35, 29, 0.72);
+}
+
+.pp-dialog__body {
+  padding: var(--pp-space-6);
+}
+
+.pp-drawer {
+  position: fixed;
+  z-index: 80;
+  top: 0;
+  right: 0;
+  width: min(90vw, 26rem);
+  height: 100dvh;
+  padding: var(--pp-space-6);
+  overflow-y: auto;
+  border: 0;
+  border-left: var(--pp-border-width) solid var(--pp-color-ink);
+  color: var(--pp-color-ink);
+  background: var(--pp-color-screen);
+  box-shadow: calc(var(--pp-space-3) * -1) 0 0 var(--pp-color-shadow);
+  transform: translateX(110%);
+  transition: transform 180ms steps(4), visibility 180ms;
+  visibility: hidden;
+}
+
+.pp-drawer[aria-hidden="false"] {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.pp-drawer-backdrop {
+  position: fixed;
+  z-index: 70;
+  inset: 0;
+  border: 0;
+  background: rgb(22, 35, 29, 0.72);
+}

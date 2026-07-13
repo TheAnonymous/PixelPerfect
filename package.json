@@ -1,0 +1,56 @@
+{
+  "name": "pixelperfect",
+  "version": "1.0.0",
+  "description": "A tiny handheld-inspired HTML and CSS toolkit for playful web interfaces.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "author": "TheAnonymous",
+  "homepage": "https://theanonymous.github.io/PixelPerfect/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheAnonymous/PixelPerfect.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TheAnonymous/PixelPerfect/issues"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run clean && npm run build:site && npm run build:library && npm run package:release",
+    "build:site": "vite build",
+    "build:library": "node scripts/build-library.mjs",
+    "package:release": "node scripts/package-release.mjs",
+    "clean": "node scripts/clean.mjs",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:html",
+    "lint:js": "eslint .",
+    "lint:css": "stylelint \"src/**/*.css\"",
+    "lint:html": "html-validate index.html",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:update": "playwright test --update-snapshots",
+    "verify:release": "node scripts/verify-release.mjs",
+    "check": "npm run lint && npm run typecheck && npm run test && npm run build && npm run verify:release"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.2",
+    "@playwright/test": "1.61.1",
+    "@testing-library/jest-dom": "6.9.1",
+    "@types/node": "24.10.9",
+    "eslint": "9.39.2",
+    "html-validate": "11.5.6",
+    "jsdom": "28.1.0",
+    "lightningcss": "1.31.1",
+    "stylelint": "17.14.0",
+    "stylelint-config-standard": "40.0.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.56.1",
+    "vite": "8.1.4",
+    "vitest": "4.1.10"
+  }
+}
