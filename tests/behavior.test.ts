@@ -98,8 +98,20 @@ describe('dropdown menus', () => {
     expect(document.querySelector('#menu')).toHaveProperty('hidden', true);
   });
 
-  it('supports Arrow keys and Escape', () => {
+  it('supports Arrow keys, Home, End, Escape, and Tab closing', () => {
     const trigger = document.querySelector<HTMLButtonElement>('#menu-trigger');
+    trigger?.focus();
+    trigger?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
+    expect(document.activeElement).toBe(document.querySelector('#second-item'));
+    document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Home' }));
+    expect(document.activeElement).toBe(document.querySelector('#first-item'));
+    document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
+    expect(document.activeElement).toBe(document.querySelector('#second-item'));
+    document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
+    expect(document.activeElement).toBe(document.querySelector('#first-item'));
+    document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Tab' }));
+    expect(document.querySelector('#menu')).toHaveProperty('hidden', true);
+
     trigger?.focus();
     trigger?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
     expect(document.activeElement).toBe(document.querySelector('#first-item'));
@@ -115,7 +127,7 @@ describe('overlays', () => {
   it('opens and closes a dialog and restores focus', () => {
     document.body.innerHTML = `
       <button id="dialog-trigger" data-pp-dialog-open="#dialog">Open</button>
-      <dialog id="dialog" class="pp-dialog"><button id="dialog-close" data-pp-dialog-close>Close</button></dialog>`;
+      <dialog id="dialog" class="pp-dialog"><button id="dialog-close" data-pp-dismiss>Close</button></dialog>`;
     const dialog = document.querySelector<HTMLDialogElement>('#dialog');
     if (dialog && typeof dialog.showModal !== 'function') {
       dialog.showModal = (): void => dialog.setAttribute('open', '');
@@ -129,18 +141,33 @@ describe('overlays', () => {
     expect(document.activeElement).toBe(document.querySelector('#dialog-trigger'));
   });
 
-  it('opens a drawer and closes it with Escape', () => {
+  it('opens a drawer, restores body overflow, and restores focus on dismiss', () => {
     document.body.innerHTML = `
       <button id="drawer-trigger" data-pp-drawer-open="#drawer">Open</button>
       <aside id="drawer" class="pp-drawer" aria-hidden="true"><button data-pp-dismiss>Close</button></aside>`;
+    document.body.style.overflow = 'clip';
     init();
     click('#drawer-trigger');
     expect(document.querySelector('#drawer')).toHaveAttribute('aria-hidden', 'false');
     expect(document.querySelector('[data-pp-drawer-backdrop="drawer"]')).not.toBeNull();
-    document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+    expect(document.body.style.overflow).toBe('hidden');
+    click('[data-pp-dismiss]');
     expect(document.querySelector('#drawer')).toHaveAttribute('aria-hidden', 'true');
     expect(document.querySelector('[data-pp-drawer-backdrop="drawer"]')).toBeNull();
     expect(document.activeElement).toBe(document.querySelector('#drawer-trigger'));
+    expect(document.body.style.overflow).toBe('clip');
+  });
+
+  it('restores the exact body overflow value when destroy closes a drawer', () => {
+    document.body.innerHTML = `
+      <button id="drawer-trigger" data-pp-drawer-open="#drawer">Open</button>
+      <aside id="drawer" class="pp-drawer" aria-hidden="true"><button>Inside</button></aside>`;
+    document.body.style.overflow = 'scroll';
+    init();
+    click('#drawer-trigger');
+    destroy();
+    expect(document.querySelector('#drawer')).toHaveAttribute('aria-hidden', 'true');
+    expect(document.body.style.overflow).toBe('scroll');
   });
 });
 
@@ -153,6 +180,13 @@ describe('dismissible feedback', () => {
     click('[data-pp-dismiss]');
     expect(handler).toHaveBeenCalledOnce();
     expect(document.querySelector('#alert')).toBeNull();
+  });
+
+  it('removes a static toast through the generic dismiss hook', () => {
+    document.body.innerHTML = '<div id="toast" class="pp-toast"><button data-pp-dismiss>Close</button></div>';
+    init();
+    click('[data-pp-dismiss]');
+    expect(document.querySelector('#toast')).toBeNull();
   });
 
   it('creates safe toast text and follows its lifecycle', () => {

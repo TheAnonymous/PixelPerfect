@@ -59,7 +59,7 @@ Override stable custom properties on `:root` or a containing element:
 }
 ```
 
-PixelPerfect v1 intentionally ships one preset. The palette is part of its identity.
+PixelPerfect v2 intentionally ships one preset. The palette is part of its identity.
 
 ## JavaScript API
 
@@ -80,7 +80,18 @@ Creates a notification and returns `{ element, dismiss }`. Options:
 - `dismissible`: whether to show a close button.
 - `container`: an element or selector; defaults to `[data-pp-toast-container]`.
 
-Supported declarative hooks are `data-pp-tabs`, `data-pp-dropdown`, `data-pp-dialog-open`, `data-pp-dialog-close`, `data-pp-drawer-open`, `data-pp-dismiss`, and `data-pp-toast-container`.
+Supported declarative hooks are `data-pp-tabs`, `data-pp-dropdown`, `data-pp-dialog-open`, `data-pp-drawer-open`, `data-pp-dismiss`, and `data-pp-toast-container`. The generic `data-pp-dismiss` hook closes its nearest alert, toast, drawer, or `dialog.pp-dialog`.
+
+## Migrating from v1
+
+PixelPerfect v2 deliberately removes two v1 names without compatibility aliases:
+
+| v1 | v2 |
+| --- | --- |
+| `pp-icon-button pp-button--secondary/ghost/small` | `pp-icon-button pp-icon-button--secondary/ghost/small` |
+| `data-pp-dialog-close` | `data-pp-dismiss` |
+
+The exported signatures of `init(root?)`, `destroy(root?)`, `toast(message, options?)`, `ToastOptions`, and `ToastHandle` are unchanged.
 
 ## Accessibility approach
 
@@ -88,7 +99,7 @@ PixelPerfect favors semantic elements, visible `:focus-visible` rings, keyboard 
 
 ## Release contents
 
-The `v1.0.0` archive contains:
+The `v2.0.0` archive contains:
 
 - `pixelperfect.css` and `pixelperfect.min.css`
 - `pixelperfect.es.js` and `pixelperfect.iife.js`

@@ -6,6 +6,7 @@
   padding: var(--pp-space-3);
   border: var(--pp-border-width) solid var(--pp-color-ink);
   border-left-width: calc(var(--pp-pixel) * 3);
+  color: var(--pp-color-ink);
   background: var(--pp-color-screen);
   box-shadow: var(--pp-shadow-sm);
 }
@@ -116,6 +117,7 @@
   pointer-events: none;
   opacity: 0;
   transform: translate(-50%, var(--pp-space-1));
+  transition: opacity 100ms steps(2), transform 100ms steps(2);
 }
 
 .pp-tooltip:hover::after,
@@ -160,6 +162,7 @@
 .pp-toast--leaving {
   opacity: 0;
   transform: translateX(var(--pp-space-4));
+  transition: opacity 160ms steps(3), transform 160ms steps(3);
 }
 
 @keyframes pp-toast-in {

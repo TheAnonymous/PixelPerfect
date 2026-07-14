@@ -22,6 +22,7 @@ interface RootState {
 const roots = new WeakMap<InitRoot, RootState>();
 const dialogTriggers = new WeakMap<HTMLDialogElement, HTMLElement>();
 const drawerTriggers = new WeakMap<HTMLElement, HTMLElement>();
+const drawerBodyOverflow = new WeakMap<HTMLElement, string>();
 
 function elements(root: InitRoot, selector: string): HTMLElement[] {
   const matches = Array.from(root.querySelectorAll<HTMLElement>(selector));
@@ -101,6 +102,17 @@ function toggleDropdown(dropdown: HTMLElement): void {
   menu.hidden = !opening;
 }
 
+function openDropdown(dropdown: HTMLElement, edge: 'first' | 'last'): void {
+  const trigger = dropdown.querySelector<HTMLElement>('[aria-haspopup="menu"]');
+  const menu = dropdown.querySelector<HTMLElement>('[role="menu"]');
+  if (!trigger || !menu) return;
+  closeOtherDropdowns(document, dropdown);
+  trigger.setAttribute('aria-expanded', 'true');
+  menu.hidden = false;
+  const items = menuItems(menu);
+  (edge === 'first' ? items[0] : items.at(-1))?.focus();
+}
+
 function openDialog(trigger: HTMLElement): void {
   const dialog = targetElement(trigger, 'data-pp-dialog-open');
   if (!(dialog instanceof HTMLDialogElement)) return;
@@ -120,7 +132,11 @@ function closeDrawer(drawer: HTMLElement, restoreFocus = true): void {
   drawer.setAttribute('aria-hidden', 'true');
   drawer.setAttribute('inert', '');
   document.querySelector<HTMLElement>(`[data-pp-drawer-backdrop="${drawer.id}"]`)?.remove();
-  document.body.style.removeProperty('overflow');
+  const previousOverflow = drawerBodyOverflow.get(drawer);
+  if (previousOverflow !== undefined) {
+    document.body.style.overflow = previousOverflow;
+    drawerBodyOverflow.delete(drawer);
+  }
   if (restoreFocus) drawerTriggers.get(drawer)?.focus();
   drawer.dispatchEvent(new CustomEvent('pp:drawerclose', { bubbles: true }));
 }
@@ -130,6 +146,7 @@ function openDrawer(trigger: HTMLElement): void {
   if (!drawer) return;
   for (const open of document.querySelectorAll<HTMLElement>('.pp-drawer[aria-hidden="false"]')) closeDrawer(open, false);
   drawerTriggers.set(drawer, trigger);
+  drawerBodyOverflow.set(drawer, document.body.style.overflow);
   drawer.setAttribute('aria-hidden', 'false');
   drawer.removeAttribute('inert');
   document.body.style.overflow = 'hidden';
@@ -145,6 +162,11 @@ function openDrawer(trigger: HTMLElement): void {
 }
 
 function dismissElement(trigger: HTMLElement): void {
+  const dialog = trigger.closest<HTMLDialogElement>('dialog.pp-dialog');
+  if (dialog) {
+    closeDialog(dialog);
+    return;
+  }
   const dismissible = trigger.closest<HTMLElement>('.pp-alert, .pp-toast, .pp-drawer');
   if (!dismissible) return;
   if (dismissible.classList.contains('pp-drawer')) {
@@ -156,7 +178,7 @@ function dismissElement(trigger: HTMLElement): void {
 }
 
 function menuItems(menu: HTMLElement): HTMLElement[] {
-  return Array.from(menu.querySelectorAll<HTMLElement>('[role="menuitem"]:not([disabled])'));
+  return Array.from(menu.querySelectorAll<HTMLElement>('[role="menuitem"]:not([disabled]):not([aria-disabled="true"])'));
 }
 
 function focusableItems(container: HTMLElement): HTMLElement[] {
@@ -184,6 +206,7 @@ function handleClick(event: Event, root: InitRoot): void {
 
   const menuItem = closestElement(target, '[data-pp-dropdown] [role="menuitem"]');
   if (menuItem) {
+    if (menuItem.matches('[disabled], [aria-disabled="true"]')) return;
     const dropdown = menuItem.closest<HTMLElement>('[data-pp-dropdown]');
     if (dropdown) closeDropdown(dropdown, true);
     return;
@@ -192,13 +215,6 @@ function handleClick(event: Event, root: InitRoot): void {
   const dialogOpen = closestElement(target, '[data-pp-dialog-open]');
   if (dialogOpen) {
     openDialog(dialogOpen);
-    return;
-  }
-
-  const dialogClose = closestElement(target, '[data-pp-dialog-close]');
-  if (dialogClose) {
-    const dialog = dialogClose.closest('dialog');
-    if (dialog instanceof HTMLDialogElement) closeDialog(dialog);
     return;
   }
 
@@ -238,26 +254,29 @@ function handleKeydown(event: KeyboardEvent, root: InitRoot): void {
   if (dropdown) {
     const trigger = dropdown.querySelector<HTMLElement>('[aria-haspopup="menu"]');
     const menu = dropdown.querySelector<HTMLElement>('[role="menu"]');
-    if (event.key === 'Escape') {
+    if (event.key === 'Escape' && trigger?.getAttribute('aria-expanded') === 'true') {
       closeDropdown(dropdown, true);
       event.preventDefault();
       return;
     }
-    if (menu && trigger && target === trigger && event.key === 'ArrowDown') {
-      trigger.setAttribute('aria-expanded', 'true');
-      menu.hidden = false;
-      menuItems(menu)[0]?.focus();
+    if (menu && trigger && target === trigger && ['ArrowDown', 'ArrowUp'].includes(event.key)) {
+      openDropdown(dropdown, event.key === 'ArrowDown' ? 'first' : 'last');
       event.preventDefault();
       return;
     }
-    if (menu && ['ArrowDown', 'ArrowUp'].includes(event.key)) {
+    if (menu && ['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
       const items = menuItems(menu);
       const index = items.indexOf(target as HTMLElement);
-      const delta = event.key === 'ArrowDown' ? 1 : -1;
-      items[(index + delta + items.length) % items.length]?.focus();
+      let next = index;
+      if (event.key === 'ArrowDown') next = (index + 1) % items.length;
+      if (event.key === 'ArrowUp') next = (index - 1 + items.length) % items.length;
+      if (event.key === 'Home') next = 0;
+      if (event.key === 'End') next = items.length - 1;
+      items[next]?.focus();
       event.preventDefault();
       return;
     }
+    if (event.key === 'Tab') closeDropdown(dropdown);
   }
 
   if (event.key === 'Escape') {
@@ -350,7 +369,7 @@ export function toast(message: string, options: ToastOptions = {}): ToastHandle 
   if (dismissible) {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'pp-icon-button pp-button--small';
+    button.className = 'pp-icon-button pp-icon-button--small';
     button.setAttribute('aria-label', 'Dismiss notification');
     button.textContent = '×';
     button.addEventListener('click', dismiss, { once: true });

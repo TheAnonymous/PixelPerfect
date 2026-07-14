@@ -57,6 +57,13 @@
   border: var(--pp-border-width) solid var(--pp-color-ink);
   background: var(--pp-color-mid);
   font-weight: 700;
+  transition: color 100ms steps(2), background-color 100ms steps(2);
+}
+
+.pp-tabs [role="tab"]:not(:disabled):hover,
+.pp-tabs [role="tab"]:focus-visible {
+  color: var(--pp-color-screen);
+  background: var(--pp-color-shadow);
 }
 
 .pp-tabs [role="tab"][aria-selected="true"] {
@@ -97,6 +104,12 @@
   background: var(--pp-color-ink);
 }
 
+.pp-pagination a:hover,
+.pp-pagination a:focus-visible {
+  color: var(--pp-color-screen);
+  background: var(--pp-color-shadow);
+}
+
 .pp-dropdown {
   position: relative;
   display: inline-block;
@@ -115,6 +128,14 @@
   background: var(--pp-color-screen);
   box-shadow: var(--pp-shadow-md);
   list-style: none;
+  animation: pp-dropdown-in 120ms steps(3);
+}
+
+@keyframes pp-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--pp-space-2) * -1));
+  }
 }
 
 .pp-dropdown__menu a,

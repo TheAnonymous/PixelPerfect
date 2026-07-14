@@ -3,7 +3,9 @@ import { cp, mkdir, readFile, readdir, rm, stat, writeFile } from 'node:fs/promi
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const version = '1.0.0';
+const packageJson = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+const version = packageJson.version;
+if (typeof version !== 'string' || !/^\d+\.\d+\.\d+$/.test(version)) throw new Error('package.json contains an invalid release version.');
 const library = new URL('../dist/library/', import.meta.url);
 const releaseRoot = new URL('../dist/release/', import.meta.url);
 const packageRoot = new URL(`pixelperfect-${version}/`, releaseRoot);
@@ -57,7 +59,7 @@ await writeFile(new URL('SHA256SUMS', packageRoot), `${checksums.join('\n')}\n`)
 const archiveName = `pixelperfect-v${version}.tar.gz`;
 const archivePath = new URL(archiveName, releaseRoot);
 await new Promise((resolve, reject) => {
-  const child = spawn('tar', ['--sort=name', '--mtime=UTC 2026-07-13', '--owner=0', '--group=0', '--numeric-owner', '-czf', fileURLToPath(archivePath), `pixelperfect-${version}`], {
+  const child = spawn('tar', ['--sort=name', '--mtime=UTC 2026-07-14', '--owner=0', '--group=0', '--numeric-owner', '-czf', fileURLToPath(archivePath), `pixelperfect-${version}`], {
     cwd: fileURLToPath(releaseRoot),
     stdio: 'inherit',
   });
@@ -66,6 +68,3 @@ await new Promise((resolve, reject) => {
 });
 
 await writeFile(new URL(`${archiveName}.sha256`, releaseRoot), `${await sha256(archivePath)}  ${archiveName}\n`);
-
-const packageJson = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
-if (packageJson.version !== version) throw new Error('package.json and release version disagree.');

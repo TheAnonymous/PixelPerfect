@@ -3,7 +3,9 @@ import { access, readFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const version = '1.0.0';
+const packageJson = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+const version = packageJson.version;
+if (typeof version !== 'string' || !/^\d+\.\d+\.\d+$/.test(version)) throw new Error('package.json contains an invalid release version.');
 const releaseRoot = new URL('../dist/release/', import.meta.url);
 const packageRoot = new URL(`pixelperfect-${version}/`, releaseRoot);
 const archiveName = `pixelperfect-v${version}.tar.gz`;

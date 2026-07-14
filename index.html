@@ -30,11 +30,51 @@
       </div>
     </header>
 
+    <nav class="site-chapter-nav" aria-label="Showcase chapters">
+      <div class="pp-container site-chapter-nav__inner">
+        <div class="site-chapter-nav__links" data-site-chapter-links>
+          <a href="#quick-start">Quick Start</a>
+          <a href="#foundations">Foundations</a>
+          <a href="#actions">Actions</a>
+          <a href="#forms">Forms</a>
+          <a href="#navigation">Navigation</a>
+          <a href="#content">Content</a>
+          <a href="#feedback">Feedback</a>
+          <a href="#overlays">Overlays</a>
+          <a href="#game-ui">Game UI</a>
+        </div>
+        <div class="site-map" data-site-map>
+          <button
+            class="site-map__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="chapter-map"
+            data-site-map-toggle
+          >
+            <span aria-hidden="true">MAP</span>
+            <span data-site-current-chapter>Quick Start</span>
+            <span aria-hidden="true">▾</span>
+          </button>
+          <div id="chapter-map" class="site-map__panel" data-site-map-panel hidden>
+            <a href="#quick-start">Quick Start</a>
+            <a href="#foundations">Foundations</a>
+            <a href="#actions">Actions</a>
+            <a href="#forms">Forms</a>
+            <a href="#navigation">Navigation</a>
+            <a href="#content">Content</a>
+            <a href="#feedback">Feedback</a>
+            <a href="#overlays">Overlays</a>
+            <a href="#game-ui">Game UI</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
     <main id="main">
       <section id="top" class="site-hero" aria-labelledby="hero-title">
         <div class="pp-container site-hero__grid">
           <div class="pp-stack site-hero__copy">
-            <p class="site-eyebrow">HTML + CSS · Optional JS · v1.0.0</p>
+            <p class="site-eyebrow">HTML + CSS · Optional JS · v2.0.0</p>
             <h1 id="hero-title">Tiny UI. Big adventure.</h1>
             <p class="site-hero__lede">
               A four-color interface kit for indie makers building playful websites, tools, and game screens.
@@ -49,14 +89,19 @@
             </div>
             <div class="pp-cluster" role="group" aria-label="Project qualities">
               <span class="pp-tag">MIT licensed</span>
-              <span class="pp-tag">6.6 KB JS</span>
+              <span class="pp-tag">2.5 KB JS gzip</span>
               <span class="pp-tag">Keyboard ready</span>
             </div>
           </div>
 
-          <div class="site-console" role="img" aria-label="A decorative pixel handheld showing a tiny world">
-            <div class="site-console__screen">
-              <div class="site-console__scene" aria-hidden="true"></div>
+            <div class="site-console" role="img" aria-label="A decorative pixel handheld showing an animated tiny world">
+              <div class="site-console__screen">
+                <div class="site-console__scene" aria-hidden="true">
+                  <span class="site-console__cloud"></span>
+                  <span class="site-console__terrain"></span>
+                  <span class="site-console__collectible"></span>
+                  <span class="site-console__hero"></span>
+                </div>
             </div>
             <div class="site-console__controls" aria-hidden="true">
               <span class="site-dpad"></span>
@@ -81,7 +126,7 @@
                 PixelPerfect is framework-neutral. Copy the release assets into your project, use semantic HTML,
                 and sprinkle in the <code>pp-</code> classes you need.
               </p>
-              <a class="pp-link" href="https://github.com/TheAnonymous/PixelPerfect/releases/latest">Download v1.0.0 ↗</a>
+              <a class="pp-link" href="https://github.com/TheAnonymous/PixelPerfect/releases/latest">Download v2.0.0 ↗</a>
             </div>
             <div class="site-code">
               <button class="pp-button pp-button--secondary pp-button--small site-copy" type="button" data-site-copy="quick-code">
@@ -144,6 +189,31 @@
         </div>
       </section>
 
+      <section class="site-component-finder" aria-labelledby="component-finder-title">
+        <div class="pp-container site-component-finder__grid">
+          <div class="pp-stack">
+            <p class="site-kicker">Component finder</p>
+            <h2 id="component-finder-title">Find the right building block</h2>
+            <p>Search all 34 components by name, category, or familiar UI term.</p>
+          </div>
+          <div class="pp-stack">
+            <label class="pp-label" for="component-search">Search components</label>
+            <input
+              id="component-search"
+              class="pp-input"
+              type="search"
+              placeholder="Try “menu”, “loading”, or “form”…"
+              autocomplete="off"
+              aria-describedby="component-result-count"
+              data-site-component-search
+            >
+            <p id="component-result-count" class="site-result-count" aria-live="polite">34 components</p>
+            <ul class="site-search-results" aria-label="Component search results" data-site-search-results></ul>
+            <noscript><p>JavaScript is optional. The complete 34-component catalog remains available below.</p></noscript>
+          </div>
+        </div>
+      </section>
+
       <div id="components">
         <section id="actions" class="pp-section site-mid" aria-labelledby="actions-title">
           <div class="pp-container">
@@ -163,7 +233,7 @@
 
               <article class="site-demo" data-component="icon-button">
                 <header class="site-demo__header"><h3>Icon button</h3><div class="pp-cluster"><button class="pp-button pp-button--small" type="button" data-site-copy="code-icon-button">Copy</button><button class="pp-button pp-button--ghost pp-button--small" type="button" data-site-code-toggle="demo-code-icon-button" aria-expanded="false">View code</button></div></header>
-                <div class="site-demo__stage"><div class="pp-cluster"><button class="pp-icon-button" type="button" aria-label="Favorite"><svg class="pp-icon" aria-hidden="true"><use href="./icons/pixelperfect-icons.svg#heart"></use></svg></button><button class="pp-icon-button pp-button--secondary" type="button" aria-label="Settings"><svg class="pp-icon" aria-hidden="true"><use href="./icons/pixelperfect-icons.svg#gear"></use></svg></button></div></div>
+                <div class="site-demo__stage"><div class="pp-cluster"><button class="pp-icon-button" type="button" aria-label="Favorite"><svg class="pp-icon" aria-hidden="true"><use href="./icons/pixelperfect-icons.svg#heart"></use></svg></button><button class="pp-icon-button pp-icon-button--secondary" type="button" aria-label="Settings"><svg class="pp-icon" aria-hidden="true"><use href="./icons/pixelperfect-icons.svg#gear"></use></svg></button></div></div>
                 <div id="demo-code-icon-button" class="site-demo__code" data-open="false"><pre id="code-icon-button"><code>&lt;button class="pp-icon-button" type="button" aria-label="Favorite"&gt;
   &lt;svg class="pp-icon" aria-hidden="true"&gt;&lt;use href="icons.svg#heart"&gt;&lt;/use&gt;&lt;/svg&gt;
 &lt;/button&gt;</code></pre></div>
@@ -418,7 +488,7 @@
             <div class="site-component-grid">
               <article class="site-demo site-demo--wide" data-component="alert">
                 <header class="site-demo__header"><h3>Alert</h3><div class="pp-cluster"><button class="pp-button pp-button--small" type="button" data-site-copy="code-alert">Copy</button><button class="pp-button pp-button--ghost pp-button--small" type="button" data-site-code-toggle="demo-code-alert" aria-expanded="false">View code</button></div></header>
-                <div class="site-demo__stage"><div class="pp-alert" role="status"><div><strong>Checkpoint reached.</strong><br><span>Your progress is safe here.</span></div><button class="pp-icon-button pp-button--ghost pp-button--small" type="button" aria-label="Dismiss alert" data-pp-dismiss>×</button></div><div class="pp-alert pp-alert--strong" role="alert"><div><strong>Low hearts!</strong><br><span>Soup would be wise.</span></div></div></div>
+                <div class="site-demo__stage"><div class="pp-alert" role="status"><div><strong>Checkpoint reached.</strong><br><span>Your progress is safe here.</span></div><button class="pp-icon-button pp-icon-button--ghost pp-icon-button--small" type="button" aria-label="Dismiss alert" data-pp-dismiss>×</button></div><div class="pp-alert pp-alert--strong" role="alert"><div><strong>Low hearts!</strong><br><span>Soup would be wise.</span></div></div></div>
                 <div id="demo-code-alert" class="site-demo__code" data-open="false"><pre id="code-alert"><code>&lt;div class="pp-alert" role="status"&gt;
   &lt;div&gt;&lt;strong&gt;Checkpoint reached.&lt;/strong&gt; Your progress is safe.&lt;/div&gt;
   &lt;button data-pp-dismiss aria-label="Dismiss alert"&gt;×&lt;/button&gt;
@@ -492,7 +562,7 @@ notice.dismiss();</code></pre></div>
                 <div id="demo-code-dialog" class="site-demo__code" data-open="false"><pre id="code-dialog"><code>&lt;button class="pp-button" data-pp-dialog-open="#rest-dialog"&gt;Rest at camp&lt;/button&gt;
 &lt;dialog id="rest-dialog" class="pp-dialog"&gt;
   &lt;div class="pp-dialog__body"&gt;…&lt;/div&gt;
-  &lt;button data-pp-dialog-close&gt;Keep walking&lt;/button&gt;
+  &lt;button data-pp-dismiss&gt;Keep walking&lt;/button&gt;
 &lt;/dialog&gt;</code></pre></div>
               </article>
 
@@ -535,6 +605,9 @@ notice.dismiss();</code></pre></div>
                 <span class="pp-badge">♥ ♥ ♥ ♥</span>
                 <span class="pp-tag">112 gems</span>
               </div>
+              <span class="site-game__cloud" aria-hidden="true"></span>
+              <span class="site-game__terrain" aria-hidden="true"></span>
+              <span class="site-game__collectible" aria-hidden="true"></span>
               <span class="site-character" role="img" aria-label="The player character"></span>
               <div class="pp-alert">
                 <div><strong>New path!</strong><br><span>The brambles moved.</span></div>
@@ -547,7 +620,7 @@ notice.dismiss();</code></pre></div>
               <hr class="pp-pixel-divider">
               <span class="pp-tag">Moonspore blade</span>
               <span class="pp-tag">Moth friend</span>
-              <button class="pp-button pp-button--small" type="button" data-site-toast="Game paused. Take your time.">Pause game</button>
+              <button class="pp-button pp-button--small" type="button" aria-pressed="false" data-site-scene-toggle>Pause world</button>
             </aside>
           </section>
         </div>
@@ -555,12 +628,12 @@ notice.dismiss();</code></pre></div>
     </main>
 
     <dialog id="rest-dialog" class="pp-dialog" aria-labelledby="rest-title">
-      <div class="pp-panel__titlebar"><span id="rest-title">Rest at camp?</span><button class="pp-icon-button pp-button--ghost pp-button--small" type="button" data-pp-dialog-close aria-label="Close dialog">×</button></div>
-      <div class="pp-dialog__body pp-stack"><p>The fire is warm. Resting restores every heart and advances the moon.</p><div class="pp-cluster"><button class="pp-button" type="button" data-pp-dialog-close data-site-toast="Rested until moonrise.">Rest now</button><button class="pp-button pp-button--secondary" type="button" data-pp-dialog-close>Keep walking</button></div></div>
+      <div class="pp-panel__titlebar"><span id="rest-title">Rest at camp?</span><button class="pp-icon-button pp-icon-button--ghost pp-icon-button--small" type="button" data-pp-dismiss aria-label="Close dialog">×</button></div>
+      <div class="pp-dialog__body pp-stack"><p>The fire is warm. Resting restores every heart and advances the moon.</p><div class="pp-cluster"><button class="pp-button" type="button" data-pp-dismiss data-site-toast="Rested until moonrise.">Rest now</button><button class="pp-button pp-button--secondary" type="button" data-pp-dismiss>Keep walking</button></div></div>
     </dialog>
 
     <aside id="inventory-drawer" class="pp-drawer pp-stack" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="inventory-title" inert>
-      <div class="pp-cluster"><span class="pp-badge">12 / 20</span><button class="pp-icon-button pp-button--secondary" type="button" data-pp-dismiss aria-label="Close inventory">×</button></div>
+      <div class="pp-cluster"><span class="pp-badge">12 / 20</span><button class="pp-icon-button pp-icon-button--secondary" type="button" data-pp-dismiss aria-label="Close inventory">×</button></div>
       <h2 id="inventory-title">Inventory</h2>
       <ul class="pp-list"><li>Moonspore blade <span>1</span></li><li>Health soup <span>3</span></li><li>Tiny key <span>7</span></li><li>Warm socks <span>2</span></li></ul>
       <div class="pp-empty"><div><strong>One curious pocket</strong><br><span>Nothing in here yet.</span></div></div>
@@ -570,7 +643,7 @@ notice.dismiss();</code></pre></div>
 
     <footer class="site-footer">
       <div class="pp-container site-footer__inner">
-        <p><strong>PixelPerfect v1.0.0</strong> · Built for small teams with large imaginations.</p>
+        <p><strong>PixelPerfect v2.0.0</strong> · Built for small teams with large imaginations.</p>
         <div class="pp-cluster"><a class="pp-link" href="https://github.com/TheAnonymous/PixelPerfect/blob/main/LICENSE">MIT license</a><a class="pp-link" href="#top">Back to top ↑</a></div>
       </div>
     </footer>

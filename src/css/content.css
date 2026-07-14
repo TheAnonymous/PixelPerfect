@@ -7,6 +7,13 @@
 
 .pp-card {
   padding: var(--pp-space-4);
+  transition: box-shadow 100ms steps(2), transform 100ms steps(2);
+}
+
+.pp-card:hover,
+.pp-card:has(:focus-visible) {
+  box-shadow: var(--pp-shadow-lg);
+  transform: translate(calc(var(--pp-pixel) * -1), calc(var(--pp-pixel) * -1));
 }
 
 .pp-card--compact {
@@ -50,6 +57,7 @@
   gap: var(--pp-space-3);
   padding: var(--pp-space-2) var(--pp-space-3);
   background: var(--pp-color-screen);
+  transition: color 100ms steps(2), background-color 100ms steps(2);
 }
 
 .pp-list > li + li {
@@ -59,6 +67,10 @@
 .pp-list > li[aria-selected="true"] {
   color: var(--pp-color-screen);
   background: var(--pp-color-ink);
+}
+
+.pp-list > li:not([aria-selected="true"]):hover {
+  background: var(--pp-color-mid);
 }
 
 .pp-table-wrap {

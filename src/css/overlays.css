@@ -9,6 +9,17 @@
   box-shadow: var(--pp-shadow-lg);
 }
 
+.pp-dialog[open] {
+  animation: pp-dialog-in 160ms steps(4);
+}
+
+@keyframes pp-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--pp-space-4));
+  }
+}
+
 .pp-dialog::backdrop {
   background: rgb(22, 35, 29, 0.72);
 }

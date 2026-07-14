@@ -32,6 +32,7 @@
   color: var(--pp-color-ink);
   background: var(--pp-color-screen);
   box-shadow: inset var(--pp-pixel) var(--pp-pixel) 0 var(--pp-color-mid);
+  transition: box-shadow 100ms steps(2), background-color 100ms steps(2);
 }
 
 .pp-input::placeholder,
@@ -59,7 +60,20 @@
 .pp-textarea[aria-invalid="true"],
 .pp-select[aria-invalid="true"] {
   border-style: double;
-  border-width: calc(var(--pp-pixel) * 2);
+}
+
+.pp-input:not(:disabled):hover,
+.pp-textarea:not(:disabled):hover,
+.pp-select:not(:disabled):hover,
+.pp-file-input:not(:disabled):hover {
+  background: var(--pp-color-mid);
+}
+
+.pp-input:focus-visible,
+.pp-textarea:focus-visible,
+.pp-select:focus-visible,
+.pp-file-input:focus-visible {
+  box-shadow: inset calc(var(--pp-pixel) * 2) calc(var(--pp-pixel) * 2) 0 var(--pp-color-mid);
 }
 
 .pp-check,
@@ -89,6 +103,11 @@
 .pp-radio input:checked {
   box-shadow: inset 0 0 0 var(--pp-pixel) var(--pp-color-screen);
   background: var(--pp-color-ink);
+}
+
+.pp-check input:not(:disabled):hover,
+.pp-radio input:not(:disabled):hover {
+  box-shadow: inset 0 0 0 var(--pp-pixel) var(--pp-color-mid);
 }
 
 .pp-switch input {
