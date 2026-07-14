@@ -200,12 +200,249 @@ function setupRevealMotion(): void {
   for (const item of items) observer.observe(item);
 }
 
+const sceneSnapshots = new Map<HTMLElement, string>();
+
+function sceneFor(element: Element): HTMLElement | null {
+  return element.closest<HTMLElement>('[data-site-scene]');
+}
+
+function outputFor(element: HTMLElement): HTMLElement | null {
+  const targetId = element.dataset.siteOutputTarget;
+  if (targetId) return document.getElementById(targetId);
+  return sceneFor(element)?.querySelector<HTMLElement>('[data-site-output]') ?? null;
+}
+
+function syncSceneSnippet(scene: HTMLElement | null): void {
+  if (!scene?.classList.contains('site-demo')) return;
+  const stage = scene.querySelector<HTMLElement>('.site-demo__stage');
+  const copy = scene.querySelector<HTMLElement>('[data-site-copy]');
+  const snippet = copy ? buttonTarget(copy, 'data-site-copy') : null;
+  if (stage && snippet) snippet.textContent = stage.innerHTML.trim();
+}
+
+function setSceneOutput(element: HTMLElement, message: string): void {
+  const output = outputFor(element);
+  const scene = sceneFor(element) ?? (output ? sceneFor(output) : null);
+  if (scene) scene.dataset.siteState = 'changed';
+  if (output) output.textContent = message;
+  syncSceneSnippet(scene);
+}
+
+function setupLiveDemos(): void {
+  for (const scene of document.querySelectorAll<HTMLElement>('.site-demo[data-site-scene]')) {
+    const stage = scene.querySelector<HTMLElement>('.site-demo__stage');
+    if (!stage) continue;
+    scene.dataset.siteState = 'ready';
+    sceneSnapshots.set(stage, stage.innerHTML);
+
+    syncSceneSnippet(scene);
+  }
+}
+
+function resetScene(control: HTMLElement): void {
+  const scene = sceneFor(control);
+  const stage = scene?.querySelector<HTMLElement>('.site-demo__stage');
+  const snapshot = stage ? sceneSnapshots.get(stage) : undefined;
+  if (!scene || !stage || snapshot === undefined) return;
+  stage.innerHTML = snapshot;
+  scene.dataset.siteState = 'ready';
+  syncSceneSnippet(scene);
+}
+
+function updateRegistry(control: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement): void {
+  const scene = sceneFor(control);
+  if (!scene) return;
+
+  if (control instanceof HTMLTextAreaElement) {
+    setSceneOutput(control, `${control.value.length} runes recorded.`);
+    return;
+  }
+
+  if (control instanceof HTMLSelectElement) {
+    setSceneOutput(control, `${control.value} selected.`);
+    return;
+  }
+
+  if (control.type === 'range') {
+    const value = control.value;
+    scene.querySelector<HTMLElement>('[data-site-range-output]')?.replaceChildren(value);
+    setSceneOutput(control, `Lantern hum set to ${value}%.`);
+    return;
+  }
+
+  if (control.type === 'file') {
+    setSceneOutput(control, control.files?.[0] ? `${control.files[0].name} attached.` : 'No sprite parcel attached.');
+    return;
+  }
+
+  if (control.type === 'radio') {
+    const label = control.closest('label')?.textContent?.trim() ?? 'Familiar';
+    setSceneOutput(control, `${label} familiar selected.`);
+    return;
+  }
+
+  if (control.type === 'checkbox') {
+    const enabled = scene.querySelectorAll<HTMLInputElement>('input[type="checkbox"]:checked').length;
+    setSceneOutput(control, `${enabled} registry ${enabled === 1 ? 'option' : 'options'} enabled.`);
+  }
+}
+
+function handleSceneAction(action: HTMLElement, event: MouseEvent): void {
+  const kind = action.dataset.siteAction;
+  const scene = sceneFor(action);
+  if (!kind) return;
+
+  if (kind === 'route') {
+    event.preventDefault();
+    setSceneOutput(action, 'Field guide route marked on your map.');
+    return;
+  }
+
+  if (kind === 'quest') {
+    setSceneOutput(action, action.dataset.quest ?? 'Quest order received.');
+    return;
+  }
+
+  if (kind === 'toggle-tool' || kind === 'pin-quest' || kind === 'filter-tag') {
+    const pressed = action.getAttribute('aria-pressed') !== 'true';
+    if (kind === 'filter-tag') {
+      for (const peer of scene?.querySelectorAll<HTMLElement>('[data-site-action="filter-tag"]') ?? []) peer.setAttribute('aria-pressed', 'false');
+    }
+    action.setAttribute('aria-pressed', String(pressed));
+    const label = action.getAttribute('aria-label') ?? action.textContent?.trim() ?? 'Control';
+    setSceneOutput(action, kind === 'filter-tag' ? `Showing ${label} quests.` : `${label} ${pressed ? 'active' : 'inactive'}.`);
+    return;
+  }
+
+  if (kind.startsWith('zoom-')) {
+    const view = scene?.querySelector<HTMLElement>('[data-site-map-view]');
+    const readout = scene?.querySelector<HTMLElement>('[data-site-action="zoom-reset"]');
+    if (!view || !readout) return;
+    const current = Number(view.dataset.zoom ?? 100);
+    const next = kind === 'zoom-reset' ? 100 : Math.min(150, Math.max(50, current + (kind === 'zoom-in' ? 25 : -25)));
+    view.dataset.zoom = String(next);
+    readout.textContent = `${next}%`;
+    readout.setAttribute('aria-pressed', String(next === 100));
+    setSceneOutput(action, `Moonwell · ${next}% map scale.`);
+    return;
+  }
+
+  if (kind === 'equip') {
+    const pressed = action.getAttribute('aria-pressed') !== 'true';
+    action.setAttribute('aria-pressed', String(pressed));
+    action.textContent = pressed ? 'Blade equipped' : 'Equip blade';
+    setSceneOutput(action, pressed ? 'Moonspore blade equipped.' : 'No item equipped.');
+    return;
+  }
+
+  if (kind === 'select-save') {
+    for (const row of scene?.querySelectorAll('.pp-list > li') ?? []) row.removeAttribute('aria-selected');
+    action.closest('li')?.setAttribute('aria-selected', 'true');
+    setSceneOutput(action, `${action.textContent?.replace(/\s+/g, ' ').trim() ?? 'Save stone'} selected.`);
+    return;
+  }
+
+  if (kind === 'replay') {
+    scene?.classList.remove('site-scene--replaying');
+    if (scene) void scene.offsetWidth;
+    scene?.classList.add('site-scene--replaying');
+    setSceneOutput(action, 'Checkpoint signal replayed.');
+    return;
+  }
+
+  if (kind === 'advance-progress') {
+    const progress = scene?.querySelector<HTMLProgressElement>('progress');
+    const readout = scene?.querySelector<HTMLElement>('[data-site-progress-output]');
+    if (!progress) return;
+    progress.value = progress.value >= progress.max ? 0 : Math.min(progress.max, progress.value + 19);
+    if (readout) readout.textContent = String(progress.value);
+    setSceneOutput(action, `Moonwell route is ${progress.value}% complete.`);
+    return;
+  }
+
+  if (kind === 'toast-count') {
+    const count = Number(scene?.dataset.toastCount ?? 0) + 1;
+    if (scene) scene.dataset.toastCount = String(count);
+    setSceneOutput(action, `${count} shrine ${count === 1 ? 'message' : 'messages'} replayed.`);
+    return;
+  }
+
+  if (kind === 'camp-rest') {
+    setSceneOutput(action, 'Rest complete · 8 hearts · moonrise.');
+    return;
+  }
+
+  if (kind === 'drawer-equip') {
+    const list = action.closest('.pp-list');
+    for (const row of list?.querySelectorAll(':scope > li') ?? []) row.removeAttribute('aria-selected');
+    action.closest('li')?.setAttribute('aria-selected', 'true');
+    const item = action.childNodes[0]?.textContent?.trim() ?? 'Item';
+    document.getElementById('inventory-drawer-output')?.replaceChildren(`${item} equipped.`);
+    setSceneOutput(action, `Pack open · ${item} equipped.`);
+  }
+}
+
+document.addEventListener('submit', (event) => {
+  const form = event.target;
+  if (!(form instanceof HTMLFormElement)) return;
+  if (form.matches('[data-site-registry-form]')) {
+    event.preventDefault();
+    const input = form.querySelector<HTMLInputElement>('input');
+    if (!input) return;
+    const length = [...input.value.trim()].length;
+    const valid = length >= 2 && length <= 20;
+    input.setAttribute('aria-invalid', String(!valid));
+    setSceneOutput(form, valid ? `${input.value} entered in the Mossmere registry.` : 'Name must contain 2–20 characters.');
+  }
+  if (form.matches('[data-site-rune-form]')) {
+    event.preventDefault();
+    const input = form.querySelector<HTMLInputElement>('input');
+    const error = form.querySelector<HTMLElement>('.pp-error');
+    if (!input) return;
+    const valid = input.value.trim().toUpperCase() === 'MOSS-21';
+    input.setAttribute('aria-invalid', String(!valid));
+    if (error) error.textContent = valid ? 'Rune accepted. The trail gate is open.' : 'That rune is not in this realm.';
+    setSceneOutput(form, valid ? 'MOSS-21 accepted. Registry restored.' : 'Rune rejected. Try MOSS-21.');
+  }
+});
+
+document.addEventListener('input', (event) => {
+  const control = event.target;
+  if (control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement) {
+    if (control.closest('[data-site-action="registry-update"]')) updateRegistry(control);
+  }
+});
+
+document.addEventListener('change', (event) => {
+  const control = event.target;
+  if (control instanceof HTMLInputElement || control instanceof HTMLSelectElement || control instanceof HTMLTextAreaElement) {
+    if (control.closest('[data-site-action="registry-update"]')) updateRegistry(control);
+  }
+});
+
+for (const eventName of ['pp:dismiss', 'pp:tabchange']) {
+  document.addEventListener(eventName, (event) => {
+    const target = event.target;
+    if (target instanceof Element) globalThis.queueMicrotask(() => syncSceneSnippet(sceneFor(target)));
+  });
+}
+
 setupChapterNavigation();
 setupComponentSearch();
 setupRevealMotion();
+setupLiveDemos();
 
 document.addEventListener('click', async (event) => {
   if (!(event.target instanceof Element)) return;
+
+  const reset = event.target.closest<HTMLElement>('[data-site-reset]');
+  if (reset) {
+    resetScene(reset);
+    return;
+  }
+
+  const sceneAction = event.target.closest<HTMLElement>('[data-site-action]');
+  if (sceneAction) handleSceneAction(sceneAction, event);
 
   const searchResult = event.target.closest<HTMLAnchorElement>('[data-site-search-result]');
   if (searchResult) {
@@ -264,3 +501,10 @@ document.addEventListener('click', async (event) => {
   const toastTrigger = event.target.closest<HTMLElement>('[data-site-toast]');
   if (toastTrigger) toast(toastTrigger.dataset.siteToast ?? 'Quest saved!', { tone: 'success' });
 });
+
+for (const eventName of ['click', 'keydown']) {
+  document.addEventListener(eventName, (event) => {
+    const target = event.target;
+    if (target instanceof Element) globalThis.queueMicrotask(() => syncSceneSnippet(sceneFor(target)));
+  });
+}

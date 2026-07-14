@@ -2,7 +2,7 @@
 
 Tiny UI. Big adventure.
 
-PixelPerfect is a framework-neutral HTML/CSS toolkit for indie web and game developers. It combines a fixed four-color handheld palette, self-hosted Pixelify Sans, crisp borders, stepped shadows, and optional zero-dependency JavaScript. The [live showcase](https://theanonymous.github.io/PixelPerfect/) documents every component and state.
+PixelPerfect is a framework-neutral HTML/CSS toolkit for indie web and game developers. It combines a fixed four-color handheld palette, self-hosted Pixelify Sans, crisp borders, stepped shadows, and optional zero-dependency JavaScript. The [live showcase](https://theanonymous.github.io/PixelPerfect/) documents every component and state as a journey through Mossmere.
 
 ## Quick start
 
@@ -42,7 +42,7 @@ PixelPerfect ships 34 documented components:
 - Feedback: alert, progress, meter, spinner, skeleton, tooltip, toast.
 - Overlays: dialog, drawer.
 
-Relevant components include disabled, selected, error, loading, empty, and compact examples in the showcase.
+Relevant components include default, focused, selected, disabled, loading, empty, error, and compact examples in the showcase. Each chapter is a code-native HTML/CSS diorama, and the local interactive examples can be replayed or reset without storing state.
 
 ## Design tokens
 
@@ -82,9 +82,9 @@ Creates a notification and returns `{ element, dismiss }`. Options:
 
 Supported declarative hooks are `data-pp-tabs`, `data-pp-dropdown`, `data-pp-dialog-open`, `data-pp-drawer-open`, `data-pp-dismiss`, and `data-pp-toast-container`. The generic `data-pp-dismiss` hook closes its nearest alert, toast, drawer, or `dialog.pp-dialog`.
 
-## Migrating from v1
+## v2 compatibility
 
-PixelPerfect v2 deliberately removes two v1 names without compatibility aliases:
+PixelPerfect v2.1 is fully compatible with v2.0. For projects migrating from v1, v2 deliberately removed two old names without compatibility aliases:
 
 | v1 | v2 |
 | --- | --- |
@@ -99,7 +99,7 @@ PixelPerfect favors semantic elements, visible `:focus-visible` rings, keyboard 
 
 ## Release contents
 
-The `v2.0.0` archive contains:
+The `v2.1.0` archive contains:
 
 - `pixelperfect.css` and `pixelperfect.min.css`
 - `pixelperfect.es.js` and `pixelperfect.iife.js`

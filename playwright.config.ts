@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const port = Number(process.env.PLAYWRIGHT_PORT ?? 4173);
+const previewURL = `http://127.0.0.1:${port}/PixelPerfect/`;
+
 export default defineConfig({
   testDir: './tests/e2e',
   outputDir: './test-results',
@@ -14,12 +17,12 @@ export default defineConfig({
     },
   },
   use: {
-    baseURL: 'http://127.0.0.1:4173/PixelPerfect/',
+    baseURL: previewURL,
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'npm run build:site && npm run preview -- --host 127.0.0.1',
-    url: 'http://127.0.0.1:4173/PixelPerfect/',
+    command: `npm run build:site && npm run preview -- --host 127.0.0.1 --port ${port}`,
+    url: previewURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
   },

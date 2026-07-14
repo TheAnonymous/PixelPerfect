@@ -2,6 +2,25 @@
 
 All notable changes to PixelPerfect are documented here. The project follows Semantic Versioning.
 
+## 2.1.0 - 2026-07-14
+
+### Added
+
+- Nine connected HTML/CSS Mossmere dioramas spanning the Trailhead, Field Guide, Camp Command Post, Adventurer Registry, Overworld Map, Quest Log and Inventory, Checkpoint Shrine, Camp, and Journey's End.
+- Showcase-private, resettable micro-scenes for quest actions, map zoom, registry validation, selection and equip flows, repeatable feedback, and camp overlays.
+- Cross-browser desktop and mobile visual baselines for Actions, Forms, Navigation, Content, Feedback, and Overlays.
+- Regression coverage for local state isolation, exact visible snippets, inverted-surface contrast, unchanged toolkit exports, and stable disabled/invalid geometry.
+
+### Changed
+
+- All 34 demos are curated Mossmere compositions with clearer default, selected, disabled, loading, empty, and error context.
+- Inverted chapters now give light component surfaces explicit foreground and background colors.
+- Mobile and reduced-motion presentations retain every component, state, action, and completed diorama while simplifying layout and motion.
+
+### Compatibility
+
+- No migration is required from v2.0. Public classes, modifiers, icons, themes, `data-pp-*` hooks, exports, and types are unchanged.
+
 ## 2.0.0 - 2026-07-14
 
 ### Added
