@@ -127,3 +127,9 @@ The Vite showcase builds to `dist/site`; distributable files and the release arc
 ## License
 
 PixelPerfect is available under the [MIT License](LICENSE). Pixelify Sans is licensed separately under the SIL Open Font License; see [third-party notices](THIRD_PARTY_NOTICES.md).
+
+<!-- github-cicd-policy -->
+## Local validation policy
+
+This repository does not use GitHub Actions or any other GitHub-hosted CI/CD. Run tests, linters, builds, and all other checks locally before merging. A documented successful local test run is sufficient for review and merge.
+<!-- /github-cicd-policy -->
